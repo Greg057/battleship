@@ -4,6 +4,7 @@ export default class Gameboard {
     constructor() {
         this.missedHits = []
         this.board = []
+        this.numberShipSunk = 0
         this.createBoard()
     }
 
@@ -49,7 +50,9 @@ export default class Gameboard {
     receiveAttack (row, column) {
         if (this.board[row][column]) {
             if (this.board[row][column] instanceof Ship) {
-                this.board[row][column].hit()            
+                this.board[row][column].hit()
+                if (this.board[row][column].isSunk()) this.numberShipSunk++
+                if (this.numberShipSunk === 5) return "Game Over"
             } else {
                 this.missedHits.push([row, column])
             }
