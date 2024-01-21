@@ -17,7 +17,8 @@ export default class Gameboard {
         }
     }
 
-    placeShip (ship, row, column, axis) {
+    placeShip (shipObj, row, column, axis) {
+        const ship = new Ship(shipObj.length)
         if (!this.isPlacementPossible(ship, row, column, axis)) return "Placement not possible here"
         for (let i = 0; i < ship.length; i++) {
             if (axis === "x") {

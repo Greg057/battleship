@@ -12,7 +12,7 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 100px;
+    gap: 48px;
     align-items: center;
     background-color: aqua;
 }
@@ -20,7 +20,7 @@
 .gameboards-container {
     display: flex;
     justify-content: center;
-    gap: 396px;
+    gap: 96px;
 }
 
 .board-cell {
@@ -29,7 +29,11 @@
     background-color: black;
 }
 
-.player-board {
+.board-cell.ship-cell {
+    background-color: orange;
+}
+
+.board {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     gap: 4px;

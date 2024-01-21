@@ -1,11 +1,11 @@
 import Player from "./player";
 import ComputerAI from "./computerAI";
-import loadUI from "./UI";
+import loadBoardUI from "./boardUI";
 
 export default function createGame () {
     const player = new Player()
     const computerAI = new ComputerAI()
-    loadUI(player, computerAI)
+    loadBoardUI(player, computerAI)
 
 
     
