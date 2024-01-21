@@ -18,7 +18,7 @@ function createGrid (board, div) {
         let columnID = 0
         arr.forEach(() => {
             const cell = document.createElement("div")
-            cell.classList.add("board-cell") 
+            cell.classList.add("board-cell")  
             cell.id = `${rowID}${columnID}`
             // cell.addEventListener("click", (e) => console.log(e.target.id))
             div.appendChild(cell)

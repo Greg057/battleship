@@ -1,23 +1,26 @@
 export default function loadShipUI (board) {
-    const boardCells = document.querySelectorAll(".board-cell")
+    const playerBoard = document.querySelector(".player-board")
 
-    boardCells.forEach(cell => {
-        if (!ships.length) {
-            return
-        }
-        cell.addEventListener("click", () => addShip(cell, board)) 
+    let clicks = 0
+    playerBoard.addEventListener("click", (event) => {
+        if (clicks === 5) return
+        if (addShip(event, board, ships[clicks]) === false) return
+        clicks++
     })
+
 }
 
-function addShip(cell, board) {
-    const ship = ships[0]
-    board.placeShip(ship, `${cell.id[0]}`, `${cell.id[1]}`, "x")
+function addShip(event, board, ship) {
+    if (board.placeShip(ship, `${event.target.id[0]}`, `${event.target.id[1]}`, "x") === false) return false
     for (let i = 0; i < ship.length; i++) {
-        console.log(i)
-        const cellTarget = document.getElementById(`${Number(cell.id) + i}`)
-        cellTarget.classList.add("ship-cell")
+        let cell;
+        if (event.target.id[0] === "0") {
+            cell = document.getElementById(`0${Number(event.target.id) + i}`)
+        } else {
+            cell = document.getElementById(`${Number(event.target.id) + i}`)
+        }
+        cell.classList.add("ship-cell")
     }  
-    ships.shift()
 }
 
 const ships = [{name: "carrier", length: 5},
