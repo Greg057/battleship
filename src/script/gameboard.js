@@ -16,22 +16,42 @@ export default class Gameboard {
         }
     }
 
-    placeShip (ship, coordinates) {
-        const row = coordinates[0]
-        const column = coordinates[1]
+    placeShip (ship, row, column, axis) {
+        if (!this.isPlacementPossible(ship, row, column, axis)) return "Placement not possible here"
         for (let i = 0; i < ship.length; i++) {
-            this.board[row][column + i] = ship
-        }
+            if (axis === "x") {
+                this.board[row][column + i] = ship
+            } else if (axis === "y") {
+                this.board[row + i][column] = ship
+            }
+        } 
     }
 
-    receiveAttack (coordinates) {
-        const row = coordinates[0]
-        const column = coordinates[1]
+    isPlacementPossible(ship, row, column, axis) {
+        if (axis === "x") {
+            if (column + ship.length > 10) return false
+            for (let i = 0; i < ship.length; i++) {
+                if (this.board[row][column + i] instanceof Ship) {
+                    return false
+                }
+            }
+        } else if (axis === "y") {
+            if (row + ship.length > 10) return false
+            for (let i = 0; i < ship.length; i++) {
+                if (this.board[row + i][column] instanceof Ship) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    receiveAttack (row, column) {
         if (this.board[row][column]) {
             if (this.board[row][column] instanceof Ship) {
                 this.board[row][column].hit()            
             } else {
-                this.missedHits.push(coordinates)
+                this.missedHits.push([row, column])
             }
             this.board[row][column] = false
         } else {

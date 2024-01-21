@@ -1,7 +1,7 @@
 import Ship from "../script/ship";
 
 let ship;
-beforeAll(() => ship = new Ship("ship", 3))
+beforeAll(() => ship = new Ship(3))
 
 test("times hit", () => {
     ship.hit()
