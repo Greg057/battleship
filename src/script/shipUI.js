@@ -1,3 +1,5 @@
+import gameUI from "./gameUI"
+
 const ships = [{name: "carrier", length: 5},
             {name: "battleship", length: 4},
             {name: "destroyer", length: 3},
@@ -6,8 +8,9 @@ const ships = [{name: "carrier", length: 5},
 
 const BORDER_STYLE = "2px solid blue"
 
-export default function loadShipUI (board) {
-    const playerBoard = document.querySelector(".player-board")
+export default function loadShipUI (player, computerAI) {
+    computerAI.placeShipRandomly(ships)
+    const board = player.gameboard
     const changeRotation = document.querySelector("#change-rotation")
 
     const boardCells = document.querySelector(".player-board").querySelectorAll(".board-cell")
@@ -18,16 +21,27 @@ export default function loadShipUI (board) {
     let clicks = 0
     boardCells.forEach(cell => {
         cell.addEventListener("mouseover", (e) => {
-            if (clicks === 5) return 
-            hoverUI(cell, ships[clicks], rotation, e)
+            if (clicks === 5) {
+                gameUI (player, computerAI)
+                clicks++
+            } else if (clicks < 5) {
+                hoverUI(cell, ships[clicks], rotation, e)
+            }
         })
         cell.addEventListener("mouseout", (e) => {
-            if (clicks === 5) return 
-            hoverUI(cell, ships[clicks], rotation, e)
+            if (clicks === 5) {
+                gameUI (player, computerAI)
+                clicks++
+            } else if (clicks < 5) {
+                hoverUI(cell, ships[clicks], rotation, e)
+            }
         })
         cell.addEventListener("click", () => {
-            if (clicks === 5) return
-            if (addShip(cell, board, ships[clicks], rotation) === false) return
+            if (clicks === 5) {
+                gameUI (player, computerAI)
+            } else if (clicks < 5) {
+                if (addShip(cell, board, ships[clicks], rotation) === false) return  
+            }
             clicks++
         })
     })

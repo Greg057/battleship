@@ -5,6 +5,10 @@ export default class ComputerAI{
         this.gameboard = new Gameboard()
     }
 
+    placeShipRandomly(ships) {
+        this.gameboard.placeShipRandom(ships)
+    }
+
     randomAttack (gameboard) {
         const row = Math.floor(Math.random() * 10)
         const column = Math.floor(Math.random() * 10)

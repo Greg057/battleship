@@ -1,13 +1,13 @@
 import loadShipUI from "./shipUI"
 
-export default function loadBoardUI (player, computer) {
+export default function loadBoardUI (player, computerAI) {
     const playerBoard = document.querySelector(".player-board")
     createGrid(player.gameboard.board, playerBoard)
 
     const computerBoard = document.querySelector(".computer-board")
-    createGrid(computer.gameboard.board, computerBoard)
+    createGrid(computerAI.gameboard.board, computerBoard)
 
-    loadShipUI(player.gameboard)
+    loadShipUI(player, computerAI)
 
     return playerBoard, computerBoard
 }

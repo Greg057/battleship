@@ -17,6 +17,27 @@ export default class Gameboard {
         }
     }
 
+    placeShipRandom (ships) {
+        ships.forEach(ship => {
+            let row = Math.floor(Math.random() * 10)
+            let column = Math.floor(Math.random() * 10)
+            let axis = Math.floor(Math.random() * 2)
+            if (axis === 0) axis = "x" 
+            else if (axis === 1) axis = "y"
+            //this.placeShip(ship, row, column, axis)
+            let successful = false
+            while (successful === false) {
+                if (this.placeShip(ship, row, column, axis) === false) {
+                    row = Math.floor(Math.random() * 10)
+                    column = Math.floor(Math.random() * 10)
+                } else {
+                    successful = true
+                }
+            }
+        }); 
+        console.table(this.board)
+    }
+
     placeShip (shipObj, row, column, axis) {
         row = Number(row)
         column = Number(column)
