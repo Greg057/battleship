@@ -24,7 +24,6 @@ export default class Gameboard {
             let axis = Math.floor(Math.random() * 2)
             if (axis === 0) axis = "x" 
             else if (axis === 1) axis = "y"
-            //this.placeShip(ship, row, column, axis)
             let successful = false
             while (successful === false) {
                 if (this.placeShip(ship, row, column, axis) === false) {
@@ -35,7 +34,6 @@ export default class Gameboard {
                 }
             }
         }); 
-        console.table(this.board)
     }
 
     placeShip (shipObj, row, column, axis) {
@@ -72,17 +70,21 @@ export default class Gameboard {
     }
 
     receiveAttack (row, column) {
+        let message
         if (this.board[row][column]) {
             if (this.board[row][column] instanceof Ship) {
                 this.board[row][column].hit()
                 if (this.board[row][column].isSunk()) this.numberShipSunk++
-                if (this.numberShipSunk === 5) return "Game Over"
+                message = "hit"
+                if (this.numberShipSunk === 5) message = "Game Over"
             } else {
                 this.missedHits.push([row, column])
+                message = "miss"
             }
             this.board[row][column] = false
         } else {
-            return "already attacked"
+            message = "already attacked"
         }
+        return message
     }
 }

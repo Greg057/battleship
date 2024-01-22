@@ -1,4 +1,4 @@
-import gameUI from "./gameUI"
+import { playGame } from "./game"
 
 const ships = [{name: "carrier", length: 5},
             {name: "battleship", length: 4},
@@ -22,7 +22,7 @@ export default function loadShipUI (player, computerAI) {
     boardCells.forEach(cell => {
         cell.addEventListener("mouseover", (e) => {
             if (clicks === 5) {
-                gameUI (player, computerAI)
+                playGame (player, computerAI)
                 clicks++
             } else if (clicks < 5) {
                 hoverUI(cell, ships[clicks], rotation, e)
@@ -30,7 +30,7 @@ export default function loadShipUI (player, computerAI) {
         })
         cell.addEventListener("mouseout", (e) => {
             if (clicks === 5) {
-                gameUI (player, computerAI)
+                playGame (player, computerAI)
                 clicks++
             } else if (clicks < 5) {
                 hoverUI(cell, ships[clicks], rotation, e)
@@ -38,7 +38,7 @@ export default function loadShipUI (player, computerAI) {
         })
         cell.addEventListener("click", () => {
             if (clicks === 5) {
-                gameUI (player, computerAI)
+                playGame (player, computerAI)
             } else if (clicks < 5) {
                 if (addShip(cell, board, ships[clicks], rotation) === false) return  
             }

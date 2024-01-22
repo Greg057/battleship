@@ -1,4 +1,5 @@
 import Gameboard from "./gameboard";
+import { updateBoardUI } from "./boardUI";
 
 export default class ComputerAI{
     constructor () {
@@ -9,12 +10,16 @@ export default class ComputerAI{
         this.gameboard.placeShipRandom(ships)
     }
 
-    randomAttack (gameboard) {
+    randomAttack (player) {
         const row = Math.floor(Math.random() * 10)
         const column = Math.floor(Math.random() * 10)
-        gameboard.board[row][column] 
-                        ? gameboard.receiveAttack(row, column)
-                        : randomAttack (gameboard)
+        let message
+        player.gameboard.board[row][column] 
+                        ? message = player.gameboard.receiveAttack(row, column)
+                        : this.randomAttack (player)
+        if (message === "Game Over") return "Game Over"
+        if (message === "already hit") return false
+        updateBoardUI(message, row, column, player)
     }
 
 }

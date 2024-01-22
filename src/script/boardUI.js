@@ -1,4 +1,5 @@
 import loadShipUI from "./shipUI"
+import ComputerAI from "./computerAI"
 
 export default function loadBoardUI (player, computerAI) {
     const playerBoard = document.querySelector(".player-board")
@@ -25,4 +26,21 @@ function createGrid (board, div) {
         })
         rowID++
     });
+}
+
+export function updateBoardUI (message, row, column, defender) {
+    let element
+    if (defender instanceof ComputerAI) {
+        const parent = document.querySelector(".computer-board")
+        element = parent.children[`${row}${column}`]
+    } else {
+        const parent = document.querySelector(".player-board")
+        element = parent.children[`${row}${column}`]
+    }    
+    if (message === "hit") {
+        element.style.backgroundColor = "red"
+    }
+    else if (message === "miss") {
+        element.style.backgroundColor = "blue"
+    }
 }
