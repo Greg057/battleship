@@ -22,9 +22,12 @@ function hoverUI (cell, ship, rotation, event) {
         if (rotation === "x") {
             if (Number(cell.id) + i < 10) {
                 newCell = document.getElementById(`0${Number(cell.id) + i}`)
+            } else if (Number(cell.id) + i > 99) {
+                return
             } else {
                 newCell = document.getElementById(`${Number(cell.id) + i}`)
             }
+            if (newCell.id[0] !== cell.id[0]) return
         } else if (rotation === "y") {
             if (cell.id[0] === "0" && i === 0) {
                 newCell = document.getElementById(cell.id)
