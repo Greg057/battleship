@@ -6,6 +6,8 @@ const ships = [{name: "carrier", length: 5},
             {name: "submarine", length: 3},
             {name: "cruiser", length: 2}]
 
+const shipNames = document.querySelector(".ship-placement").querySelectorAll("h4")
+
 const BORDER_STYLE = "2px solid #9e7ff0"
 
 export default function loadShipUI (player, computerAI) {
@@ -122,7 +124,12 @@ function addShip(cell, board, ship, rotation) {
         newCell.classList.remove("green-hover")
         newCell.style.backgroundColor = "black";
         styleBorders (i, newCell, rotation, ship)
-        
+        shipNames.forEach(shipName => {
+            if (shipName.textContent.toLowerCase() === ship.name) {
+                shipName.innerHTML = `<del>${shipName.textContent}</del>`
+                shipName.style.opacity = "0.5"
+            }
+        })
     }  
 }
 

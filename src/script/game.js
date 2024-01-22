@@ -9,7 +9,7 @@ export default function createGame () {
 }
 
 export function playGame (player, computerAI) {
-    document.querySelector("button").style.display = "none"
+    document.querySelector(".ship-placement").style.display = "none"
     document.querySelector("h2").textContent = "Ready to fire Captain!"
     const computerBoard = document.querySelector(".computer-board")
     computerBoard.style.cursor = "pointer"
