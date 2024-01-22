@@ -6,7 +6,7 @@ const ships = [{name: "carrier", length: 5},
             {name: "submarine", length: 3},
             {name: "cruiser", length: 2}]
 
-const BORDER_STYLE = "2px solid blue"
+const BORDER_STYLE = "2px solid #9e7ff0"
 
 export default function loadShipUI (player, computerAI) {
     computerAI.placeShipRandomly(ships)
@@ -21,6 +21,7 @@ export default function loadShipUI (player, computerAI) {
     let clicks = 0
     boardCells.forEach(cell => {
         cell.addEventListener("mouseover", (e) => {
+            cell.style.cursor = "not-allowed"
             if (clicks === 5) {
                 playGame (player, computerAI)
                 clicks++
@@ -48,9 +49,14 @@ export default function loadShipUI (player, computerAI) {
 }
 
 function hoverUI (cell, ship, rotation, event) {
+    cell.style.cursor = "pointer"
     for (let i = 0; i < ship.length; i++) {
+        
         let newCell;
         if (rotation === "x") {
+            if (Number(cell.id[1]) + ship.length > 10) {
+                cell.style.cursor = "not-allowed"
+            }
             if (Number(cell.id) + i < 10) {
                 newCell = document.getElementById(`0${Number(cell.id) + i}`)
             } else if (Number(cell.id) + i > 99) {
@@ -60,6 +66,9 @@ function hoverUI (cell, ship, rotation, event) {
             }
             if (newCell.id[0] !== cell.id[0]) return
         } else if (rotation === "y") {
+            if (Number(cell.id[0]) + ship.length > 10) {
+                cell.style.cursor = "not-allowed"
+            }
             if (cell.id[0] === "0" && i === 0) {
                 newCell = document.getElementById(cell.id)
             } else if (Number(cell.id) + i * 10 > 99) {
@@ -68,15 +77,25 @@ function hoverUI (cell, ship, rotation, event) {
                 newCell = document.getElementById(`${Number(cell.id) + i * 10}`)
             }
         }
-        if (newCell.style.backgroundColor === "orange") {
-            continue
+        
+        if (newCell.style.backgroundColor == "black") {
+            cell.style.cursor = "not-allowed"
+            document.querySelectorAll(".green-hover").forEach(cell => cell.style.backgroundColor = "red")
         } else {
             if (event.type == 'mouseout') {
-                newCell.style.backgroundColor = "black";
+                newCell.style.backgroundColor = "#004080";
+                newCell.classList.remove("green-hover")
             }
             if (event.type == 'mouseover') {
+                if (cell.style.cursor === "not-allowed") {
+                    newCell.style.backgroundColor = "red";
+                } else {
+                    newCell.style.backgroundColor = "#04e004";
+                    newCell.classList.add("green-hover")
+                }
                 
-                newCell.style.backgroundColor = "red";
+                
+                
             }
         }  
     } 
@@ -100,7 +119,8 @@ function addShip(cell, board, ship, rotation) {
                 newCell = document.getElementById(`${Number(cell.id) + i * 10}`)
             }
         }
-        newCell.style.backgroundColor = "orange";
+        newCell.classList.remove("green-hover")
+        newCell.style.backgroundColor = "black";
         styleBorders (i, newCell, rotation, ship)
         
     }  

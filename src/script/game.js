@@ -9,9 +9,11 @@ export default function createGame () {
 }
 
 export function playGame (player, computerAI) {
+    document.querySelector("button").style.display = "none"
+    document.querySelector("h2").textContent = "Ready to fire Captain!"
     const computerBoard = document.querySelector(".computer-board")
+    computerBoard.style.cursor = "pointer"
     const computerBoardCells = computerBoard.querySelectorAll(".board-cell")
-    console.table(computerAI.gameboard.board)
     let gameStop = false
     computerBoardCells.forEach(cell => cell.addEventListener("click", () => {
         if (gameStop === true) return

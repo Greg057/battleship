@@ -38,9 +38,9 @@ export function updateBoardUI (message, row, column, defender) {
         element = parent.children[`${row}${column}`]
     }    
     if (message === "hit") {
-        element.style.backgroundColor = "red"
+        element.style.backgroundColor = "#d60000"
     }
     else if (message === "miss") {
-        element.style.backgroundColor = "blue"
+        element.style.backgroundColor = "#D3D3D3"
     }
 }
