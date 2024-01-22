@@ -8,56 +8,57 @@ export default function loadShipUI (board) {
     changeRotation.addEventListener("click", () => {rotation === "x" ? rotation = "y" : rotation = "x"})
 
     let clicks = 0
-    console.log(boardCells)
     boardCells.forEach(cell => {
-        cell.addEventListener("mouseover", (event) => hoverUI(ships[clicks], rotation, event))
-        cell.addEventListener("mouseout", (event) => hoverUI(ships[clicks], rotation, event))
+        cell.addEventListener("mouseover", (e) => hoverUI(cell, ships[clicks], rotation, e))
+        cell.addEventListener("mouseout", (e) => hoverUI(cell, ships[clicks], rotation, e))
     })
-    playerBoard.addEventListener("click", (event) => {
-        if (clicks === 5) return
-        if (addShip(event, board, ships[clicks], rotation) === false) return
-        clicks++
-    })
+    
 
 }
 
-function hoverUI (ship, rotation, event) {
-    console.log("hi")
+function hoverUI (cell, ship, rotation, event) {
     for (let i = 0; i < ship.length; i++) {
-        let cell;
+        let newCell;
         if (rotation === "x") {
-            if (event.target.id[0] === "0") {
-                cell = document.getElementById(`0${Number(event.target.id) + i}`)
+            if (Number(cell.id) + i < 10) {
+                newCell = document.getElementById(`0${Number(cell.id) + i}`)
             } else {
-                cell = document.getElementById(`${Number(event.target.id) + i}`)
+                newCell = document.getElementById(`${Number(cell.id) + i}`)
             }
         } else if (rotation === "y") {
-            cell = document.getElementById(`${Number(event.target.id) + i * 10}`)
+            if (cell.id[0] === "0" && i === 0) {
+                newCell = document.getElementById(cell.id)
+            } else {
+                newCell = document.getElementById(`${Number(cell.id) + i * 10}`)
+            }
         }
-        if (event.type == 'mouseover') {
-            cell.style.backgroundColor = "red";
-          }
-          if (event.type == 'mouseout') {
-            cell.style.backgroundColor = "black";
-          }
+        if (newCell.classList.contains("ship-cell")) {
+            return
+        } else {
+            if (event.type == 'mouseout') {
+                newCell.style.backgroundColor = "black";
+            }
+            if (event.type == 'mouseover') {
+                
+                newCell.style.backgroundColor = "red";
+            }
+        }
+            
+        //newCell.style.backgroundColor = "red";
         
     } 
-
+    /* cell.addEventListener("click", () => {
+        if (clicks === 5) return
+        if (addShip(cell, board, ship, rotation) === false) return
+        clicks++
+    }, { once: true}) */
 } 
 
-function addShip(event, board, ship, rotation) {
-    if (board.placeShip(ship, `${event.target.id[0]}`, `${event.target.id[1]}`, rotation) === false) return false
+function addShip(cell, board, ship, rotation) {
+    if (board.placeShip(ship, `${cell.id[0]}`, `${cell.id[1]}`, rotation) === false) return false
     for (let i = 0; i < ship.length; i++) {
-        let cell;
-        if (rotation === "x") {
-            if (event.target.id[0] === "0") {
-                cell = document.getElementById(`0${Number(event.target.id) + i}`)
-            } else {
-                cell = document.getElementById(`${Number(event.target.id) + i}`)
-            }
-        } else if (rotation === "y") {
-            cell = document.getElementById(`${Number(event.target.id) + i * 10}`)
-        }
+        
+        console.log(cell.id)
         cell.classList.add("ship-cell")
     }  
 }
