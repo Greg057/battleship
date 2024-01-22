@@ -20,7 +20,6 @@ function createGrid (board, div) {
             const cell = document.createElement("div")
             cell.classList.add("board-cell")  
             cell.id = `${rowID}${columnID}`
-            // cell.addEventListener("click", (e) => console.log(e.target.id))
             div.appendChild(cell)
             columnID++
         })

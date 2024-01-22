@@ -1,3 +1,11 @@
+const ships = [{name: "carrier", length: 5},
+            {name: "battleship", length: 4},
+            {name: "destroyer", length: 3},
+            {name: "submarine", length: 3},
+            {name: "cruiser", length: 2}]
+
+const BORDER_STYLE = "2px solid blue"
+
 export default function loadShipUI (board) {
     const playerBoard = document.querySelector(".player-board")
     const changeRotation = document.querySelector("#change-rotation")
@@ -79,11 +87,30 @@ function addShip(cell, board, ship, rotation) {
             }
         }
         newCell.style.backgroundColor = "orange";
+        styleBorders (i, newCell, rotation, ship)
+        
     }  
 }
 
-const ships = [{name: "carrier", length: 5},
-            {name: "battleship", length: 4},
-            {name: "destroyer", length: 3},
-            {name: "submarine", length: 3},
-            {name: "cruiser", length: 2}]
+function styleBorders (i, newCell, rotation, ship) {
+    if (rotation === "y") {
+        if (i === 0) {
+            newCell.style.borderTop = BORDER_STYLE
+        }
+        else if (i === ship.length - 1) {
+            newCell.style.borderBottom = BORDER_STYLE
+        }
+        newCell.style.borderRight = BORDER_STYLE
+        newCell.style.borderLeft = BORDER_STYLE
+    } else if (rotation === "x") {
+        if (i === 0) {
+            newCell.style.borderLeft = BORDER_STYLE
+        }
+        else if (i === ship.length - 1) {
+            newCell.style.borderRight = BORDER_STYLE
+        }
+        newCell.style.borderTop = BORDER_STYLE
+        newCell.style.borderBottom = BORDER_STYLE
+    }
+}
+
