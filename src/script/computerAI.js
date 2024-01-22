@@ -19,6 +19,7 @@ export default class ComputerAI{
                         : this.randomAttack (player)
         updateBoardUI(message, row, column, player)
         if (message === "Game Over") return "Game Over"
+        if (message === "hit") return "hit"
     }
 
 }

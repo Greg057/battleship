@@ -24,15 +24,25 @@ export function playGame (player, computerAI) {
             showDialog ("player")
             gameStop = true
             return
-        } else if (message === "already hit") {
+        } else if (message === "already hit" || message === "hit") {
             return
         }
-        const message2 = computerAI.randomAttack(player)        
-        if (message2 === "Game Over") {
-            showDialog ("computer")
-            gameStop = true
-            return
-        }        
+        let play = true
+        while(play === true) {
+            const message2 = computerAI.randomAttack(player)        
+            if (message2 === "Game Over") {
+                showDialog ("computer")
+                gameStop = true
+                play = false
+                return
+            }  
+            if (message2 === "hit") {
+                play = true
+            } else {
+                play = false
+            }
+        }
+                  
     }))
 }
 
