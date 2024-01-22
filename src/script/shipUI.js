@@ -9,16 +9,20 @@ export default function loadShipUI (board) {
 
     let clicks = 0
     boardCells.forEach(cell => {
-        cell.addEventListener("mouseover", (e) => hoverUI(cell, ships[clicks], rotation, e))
-        cell.addEventListener("mouseout", (e) => hoverUI(cell, ships[clicks], rotation, e))
+        cell.addEventListener("mouseover", (e) => {
+            if (clicks === 5) return 
+            hoverUI(cell, ships[clicks], rotation, e)
+        })
+        cell.addEventListener("mouseout", (e) => {
+            if (clicks === 5) return 
+            hoverUI(cell, ships[clicks], rotation, e)
+        })
         cell.addEventListener("click", () => {
             if (clicks === 5) return
             if (addShip(cell, board, ships[clicks], rotation) === false) return
             clicks++
         })
     })
-    
-
 }
 
 function hoverUI (cell, ship, rotation, event) {
@@ -42,8 +46,8 @@ function hoverUI (cell, ship, rotation, event) {
                 newCell = document.getElementById(`${Number(cell.id) + i * 10}`)
             }
         }
-        if (newCell.classList.contains("ship-cell")) {
-            return
+        if (newCell.style.backgroundColor === "orange") {
+            continue
         } else {
             if (event.type == 'mouseout') {
                 newCell.style.backgroundColor = "black";
@@ -52,24 +56,29 @@ function hoverUI (cell, ship, rotation, event) {
                 
                 newCell.style.backgroundColor = "red";
             }
-        }
-            
-        //newCell.style.backgroundColor = "red";
-        
+        }  
     } 
-    /* cell.addEventListener("click", () => {
-        if (clicks === 5) return
-        if (addShip(cell, board, ship, rotation) === false) return
-        clicks++
-    }, { once: true}) */
 } 
 
 function addShip(cell, board, ship, rotation) {
     if (board.placeShip(ship, `${cell.id[0]}`, `${cell.id[1]}`, rotation) === false) return false
     for (let i = 0; i < ship.length; i++) {
-        
-        console.log(cell.id)
-        cell.classList.add("ship-cell")
+        let newCell;
+        if (rotation === "x") {
+            if (Number(cell.id) + i < 10) {
+                newCell = document.getElementById(`0${Number(cell.id) + i}`)
+            } else {
+                newCell = document.getElementById(`${Number(cell.id) + i}`)
+            }
+            if (newCell.id[0] !== cell.id[0]) return
+        } else if (rotation === "y") {
+            if (cell.id[0] === "0" && i === 0) {
+                newCell = document.getElementById(cell.id)
+            } else {
+                newCell = document.getElementById(`${Number(cell.id) + i * 10}`)
+            }
+        }
+        newCell.style.backgroundColor = "orange";
     }  
 }
 

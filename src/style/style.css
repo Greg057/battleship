@@ -30,10 +30,6 @@
     border: 1px solid greenyellow
 }
 
-.board-cell.ship-cell {
-    background-color: orange;
-}
-
 .board {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
