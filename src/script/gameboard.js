@@ -83,7 +83,7 @@ export default class Gameboard {
             }
             this.board[row][column] = false
         } else {
-            message = "already attacked"
+            message = "already hit"
         }
         return message
     }

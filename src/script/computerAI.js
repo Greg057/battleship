@@ -17,9 +17,8 @@ export default class ComputerAI{
         player.gameboard.board[row][column] 
                         ? message = player.gameboard.receiveAttack(row, column)
                         : this.randomAttack (player)
-        if (message === "Game Over") return "Game Over"
-        if (message === "already hit") return false
         updateBoardUI(message, row, column, player)
+        if (message === "Game Over") return "Game Over"
     }
 
 }
