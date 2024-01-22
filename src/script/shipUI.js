@@ -11,6 +11,11 @@ export default function loadShipUI (board) {
     boardCells.forEach(cell => {
         cell.addEventListener("mouseover", (e) => hoverUI(cell, ships[clicks], rotation, e))
         cell.addEventListener("mouseout", (e) => hoverUI(cell, ships[clicks], rotation, e))
+        cell.addEventListener("click", () => {
+            if (clicks === 5) return
+            if (addShip(cell, board, ships[clicks], rotation) === false) return
+            clicks++
+        })
     })
     
 
@@ -31,6 +36,8 @@ function hoverUI (cell, ship, rotation, event) {
         } else if (rotation === "y") {
             if (cell.id[0] === "0" && i === 0) {
                 newCell = document.getElementById(cell.id)
+            } else if (Number(cell.id) + i * 10 > 99) {
+                return
             } else {
                 newCell = document.getElementById(`${Number(cell.id) + i * 10}`)
             }
