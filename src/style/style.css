@@ -43,6 +43,7 @@ button {
     border-radius: 12px;
     width: 250px;
     height: 50px;
+    cursor: pointer;
 }
 
 .ship-placement {
@@ -72,4 +73,29 @@ button {
 .board {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
+}
+
+dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 18px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    color: #001a33;
+    text-align: center;
+    padding: 56px 152px;
+    opacity: 0.98;
+}
+
+dialog h2 {
+    color: #001a33;
+    font-size: 58px;
+    letter-spacing: 8px;
+    margin-bottom: 48px;
+}
+
+dialog button {
+    width: 400px;
+    font-size: 34px;
 }
