@@ -26,8 +26,7 @@ function createClickEvent (player, computerAI) {
     }, {once : true})
 }
 
-let row
-let column
+
 let hits = []
 let alreadyHit = []
 
@@ -45,66 +44,68 @@ async function gameRound (event, player, computerAI) {
     let play = true
     while (play === true) {
         let message2
+        console.log(hits)
         if (hits.length > 0) {
-            row = Number(String(hits[hits.length - 1]).charAt(0))
-            column = Number(String(hits[hits.length - 1]).charAt(1))
+            let row = hits[hits.length - 1][0]
+            let column = hits[hits.length - 1][1]
             let addToRow = 0
             let addToColumn = 0
 
             if (hits.length > 1) {
-                if (row == Number(String(hits[hits.length - 2]).charAt(0))) {
+                if (row == hits[hits.length - 2][0]) {
                     let i = 0
-                    if (alreadyHit.includes(row * 10 + column + 1) && hits.includes(row * 10 + column + 1) === false) {
-                        while (alreadyHit.includes(row * 10 + column - i) && hits.includes(row * 10 + column - i)) {
+                    if (arrIncludesArr(alreadyHit, [row, column + 1]) && arrIncludesArr(hits, [row, column + 1]) === false && column > 0) {
+                        while (arrIncludesArr(alreadyHit, [row, column - i]) && arrIncludesArr(hits, [row, column - i]) && (column - addToColumn >= 0)) {
                             addToColumn -= 1
                             i++
                         }
-                    } else if (alreadyHit.includes(row * 10 + column + 1) === false && hits.includes(row * 10 + column + 1) === false) {
+                    } else if (arrIncludesArr(alreadyHit, [row, column - 1]) === false && arrIncludesArr(hits, [row, column - 1]) === false && column > 0) {
+                        addToColumn -= 1
+                    } 
+                    else if (arrIncludesArr(alreadyHit, [row, column + 1]) === false && arrIncludesArr(hits, [row, column + 1]) === false && column < 9) {
                         addToColumn += 1
-                    } else if (alreadyHit.includes(row * 10 + column - 1) && hits.includes(row * 10 + column - 1) === false) {
+                    } else if (arrIncludesArr(alreadyHit, [row, column - 1]) && arrIncludesArr(hits, [row, column - 1]) === false  && column < 9) {
                         i = 0
-                        while (alreadyHit.includes(row * 10 + column + i) && hits.includes(row * 10 + column + i)) {
+                        while (arrIncludesArr(alreadyHit, [row, column + i]) && arrIncludesArr(hits, [row, column + i]) && (column + addToColumn) <= 9) {
                             addToColumn += 1
                             i++
                         } 
-                    } else if (alreadyHit.includes(row * 10 + column - 1) === false && hits.includes(row * 10 + column - 1) === false) {
-                        addToColumn -= 1
-                    }
+                    } 
                     
                     column += addToColumn
-                    if (alreadyHit.includes(row * 10 + column)) {
+                    if (arrIncludesArr(alreadyHit, [row, column])) {
                         hits = []
                         row = Math.floor(Math.random() * 10)
                         column = Math.floor(Math.random() * 10)
                     }
+                    
+                    
                        
                 }
                 
                 
-                else if (column === Number(String(hits[hits.length - 2]).charAt(1))) {
+                else if (column === hits[hits.length - 2][1]) {
                     let i = 0
-                    if (alreadyHit.includes((row + 1) * 10 + column) && hits.includes((row + 1) * 10 + column) === false) {
-                        while (alreadyHit.includes((row - i) * 10 + column) && hits.includes((row - i) * 10 + column)) {
+                    if (arrIncludesArr(alreadyHit, [row + 1, column]) && arrIncludesArr(hits, [row + 1, column]) === false && row > 0) {
+                        while (arrIncludesArr(alreadyHit, [row - i, column]) && arrIncludesArr(hits, [row - i, column]) && (row + addToRow) >= 0) {
                             addToRow -= 1
                             i++
                         }
+                    } else if (arrIncludesArr(alreadyHit, [row - 1, column]) === false && arrIncludesArr(hits, [row - 1, column]) === false && row > 0) {
+                        addToRow -= 1
                     }
-                    else if (alreadyHit.includes((row + 1) * 10 + column) === false && hits.includes((row + 1) * 10 + column) === false) {
+                    else if (arrIncludesArr(alreadyHit, [row + 1, column]) === false && arrIncludesArr(hits, [row + 1, column]) === false && row < 9) {
                         addToRow += 1
-                    } else if (alreadyHit.includes((row - 1) * 10 + column) && hits.includes((row - 1) * 10 + column) === false) {
+                    } else if (arrIncludesArr(alreadyHit, [row - 1, column]) && arrIncludesArr(hits, [row - 1, column]) === false && row < 9) {
                         i = 0
-                        while (alreadyHit.includes((row + i) * 10 + column) && hits.includes((row + i) * 10 + column)) {
+                        while (arrIncludesArr(alreadyHit, [row + i, column]) && arrIncludesArr(hits, [row + i, column]) && (row + addToRow) <= 9) {
                             addToRow += 1
                             i++
                         } 
-                    } else if (alreadyHit.includes((row - 1) * 10 + column) === false && hits.includes((row - 1) * 10 + column) === false) {
-                        addToRow -= 1
-                    }
+                    } 
                     
                     row += addToRow
-                    if (alreadyHit.includes(row * 10 + column)) {
-                        console.log(row)
-                        console.log(alreadyHit.includes(row * 10 + column))
+                    if (arrIncludesArr(alreadyHit, [row, column])) {
                         hits = []
                         row = Math.floor(Math.random() * 10)
                         column = Math.floor(Math.random() * 10)
@@ -113,10 +114,10 @@ async function gameRound (event, player, computerAI) {
 
             } 
             else {
-                if (alreadyHit.includes((row + 1) * 10 + column)) {
-                    if (alreadyHit.includes((row - 1) * 10 + column)) {
-                        if (alreadyHit.includes(row * 10 + column + 1)) {
-                            if (alreadyHit.includes(row * 10 + column - 1)) {
+                if (arrIncludesArr(alreadyHit, [row + 1, column]) || ((row + 1) > 9)) {
+                    if (arrIncludesArr(alreadyHit, [row - 1, column]) || ((row - 1) < 0)) {
+                        if (arrIncludesArr(alreadyHit, [row, column + 1]) || ((column + 1) > 9)) {
+                            if (arrIncludesArr(alreadyHit, [row, column - 1]) || ((column - 1) < 0)) {
                                 row = Math.floor(Math.random() * 10)
                                 column = Math.floor(Math.random() * 10)
                             } else {
@@ -147,11 +148,12 @@ async function gameRound (event, player, computerAI) {
             return
         }  
         if (message2 === "hit") {
-            hits.push(row * 10 + column)
-            alreadyHit.push(row * 10 + column)
+            hits.push([row, column])
+            alreadyHit.push([row, column])
+ 
         }
         if (message2 === "miss") {
-            alreadyHit.push(row * 10 + column)
+            alreadyHit.push([row, column])
         }
         if (message2 === "already hit") {
             delay = false
@@ -179,7 +181,11 @@ async function computerAttack (computerAI, player, row, column, delay) {
     return message2
 }
 
-
+export function arrIncludesArr (bigArr, arrCheck) {
+    bigArr.some(arr => {
+        arr === arrCheck
+    })
+}
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
