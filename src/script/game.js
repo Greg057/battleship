@@ -44,34 +44,98 @@ async function gameRound (event, player, computerAI) {
     let delay = true
     let play = true
     while (play === true) {
-        console.log("hits array: ")
-        console.log(hits)
-        console.log("alreadyHit array: " )
-        console.log(alreadyHit)
         let message2
         if (hits.length > 0) {
-            row = hits[hits.length - 1][0]
-            column = hits[hits.length - 1][1]
-            if (alreadyHit.includes((row + 1) * 10 + column)) {
-                if (alreadyHit.includes((row - 1) * 10 + column)) {
-                    if (alreadyHit.includes(row * 10 + column + 1)) {
-                        if (alreadyHit.includes(row * 10 + column - 1)) {
-                            row = Math.floor(Math.random() * 10)
-                            column = Math.floor(Math.random() * 10)
-                        } else {
-                            column -= 1
-                        }
-                    } else {
-                        column += 1
-                    }
+            row = Number(String(hits[hits.length - 1]).charAt(0))
+            column = Number(String(hits[hits.length - 1]).charAt(1))
+            let addToRow = 0
+            let addToColumn = 0
 
-                } else {
-                    row -= 1
+            if (hits.length > 1) {
+                if (row == Number(String(hits[hits.length - 2]).charAt(0))) {
+                    let i = 0
+                    if (alreadyHit.includes(row * 10 + column + 1) && hits.includes(row * 10 + column + 1) === false) {
+                        while (alreadyHit.includes(row * 10 + column - i) && hits.includes(row * 10 + column - i)) {
+                            addToColumn -= 1
+                            i++
+                        }
+                    } else if (alreadyHit.includes(row * 10 + column + 1) === false && hits.includes(row * 10 + column + 1) === false) {
+                        addToColumn += 1
+                    } else if (alreadyHit.includes(row * 10 + column - 1) && hits.includes(row * 10 + column - 1) === false) {
+                        i = 0
+                        while (alreadyHit.includes(row * 10 + column + i) && hits.includes(row * 10 + column + i)) {
+                            addToColumn += 1
+                            i++
+                        } 
+                    } else if (alreadyHit.includes(row * 10 + column - 1) === false && hits.includes(row * 10 + column - 1) === false) {
+                        addToColumn -= 1
+                    }
+                    
+                    column += addToColumn
+                    if (alreadyHit.includes(row * 10 + column)) {
+                        hits = []
+                        row = Math.floor(Math.random() * 10)
+                        column = Math.floor(Math.random() * 10)
+                    }
+                       
+                }
+                
+                
+                else if (column === Number(String(hits[hits.length - 2]).charAt(1))) {
+                    let i = 0
+                    if (alreadyHit.includes((row + 1) * 10 + column) && hits.includes((row + 1) * 10 + column) === false) {
+                        while (alreadyHit.includes((row - i) * 10 + column) && hits.includes((row - i) * 10 + column)) {
+                            addToRow -= 1
+                            i++
+                        }
+                    }
+                    else if (alreadyHit.includes((row + 1) * 10 + column) === false && hits.includes((row + 1) * 10 + column) === false) {
+                        addToRow += 1
+                    } else if (alreadyHit.includes((row - 1) * 10 + column) && hits.includes((row - 1) * 10 + column) === false) {
+                        i = 0
+                        while (alreadyHit.includes((row + i) * 10 + column) && hits.includes((row + i) * 10 + column)) {
+                            addToRow += 1
+                            i++
+                        } 
+                    } else if (alreadyHit.includes((row - 1) * 10 + column) === false && hits.includes((row - 1) * 10 + column) === false) {
+                        addToRow -= 1
+                    }
+                    
+                    row += addToRow
+                    if (alreadyHit.includes(row * 10 + column)) {
+                        console.log(row)
+                        console.log(alreadyHit.includes(row * 10 + column))
+                        hits = []
+                        row = Math.floor(Math.random() * 10)
+                        column = Math.floor(Math.random() * 10)
+                    }
                 }
 
-            } else {
-                row += 1
+            } 
+            else {
+                if (alreadyHit.includes((row + 1) * 10 + column)) {
+                    if (alreadyHit.includes((row - 1) * 10 + column)) {
+                        if (alreadyHit.includes(row * 10 + column + 1)) {
+                            if (alreadyHit.includes(row * 10 + column - 1)) {
+                                row = Math.floor(Math.random() * 10)
+                                column = Math.floor(Math.random() * 10)
+                            } else {
+                                column -= 1
+                            }
+                        } else {
+                            column += 1
+                        }
+    
+                    } else {
+                        row -= 1
+                    }
+    
+                } else {
+                    row += 1
+                }
             }
+
+            
         } else {
             row = Math.floor(Math.random() * 10)
             column = Math.floor(Math.random() * 10)
@@ -83,7 +147,7 @@ async function gameRound (event, player, computerAI) {
             return
         }  
         if (message2 === "hit") {
-            hits.push([row, column])
+            hits.push(row * 10 + column)
             alreadyHit.push(row * 10 + column)
         }
         if (message2 === "miss") {
