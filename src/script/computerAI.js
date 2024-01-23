@@ -10,16 +10,11 @@ export default class ComputerAI{
         this.gameboard.placeShipRandom(ships)
     }
 
-    randomAttack (player) {
-        const row = Math.floor(Math.random() * 10)
-        const column = Math.floor(Math.random() * 10)
+    randomAttack (player, row, column) {
         let message
-        player.gameboard.board[row][column] 
-                        ? message = player.gameboard.receiveAttack(row, column)
-                        : this.randomAttack (player)
+        message = player.gameboard.receiveAttack(row, column)
         updateBoardUI(message, row, column, player)
-        if (message === "Game Over") return "Game Over"
-        if (message === "hit") return "hit"
+        return message
     }
 
 }

@@ -26,7 +26,7 @@ function createClickEvent (player, computerAI) {
     }, {once : true})
 }
 
-async function gameRound (event, player, computerAI) {
+function gameRound (event, player, computerAI) {
     const message = player.sendAttack(event.target.id[0], event.target.id[1], computerAI)
     if (message === "Game Over") {
         showDialog ("player")
@@ -37,25 +37,47 @@ async function gameRound (event, player, computerAI) {
     }
 
     let play = true
-    while(play === true) {
-        let message2 
-        setTimeout(() => {
-            message2 = computerAI.randomAttack(player)  
-        }, 1000);
-        await sleep(1000)
+    let hit = false
+    let row
+    let column
+    while (play === true) {
+        let message2
+        if (hit === true) {
+            row = row
+            column = column
+            message2 = computerAttack (computerAI, player, row, column)
+        } else {
+            const row = Math.floor(Math.random() * 10)
+            const column = Math.floor(Math.random() * 10)
+            message2 = computerAttack (computerAI, player, row, column)
+        }
         if (message2 === "Game Over") {
             play = false
             showDialog ("computer")
             return
         }  
         if (message2 === "hit") {
-            play = true
-        } else {
+            hit = true
+        }
+        if (message2 !== "hit" || message2 !== "already hit") {
             play = false
         }
     }
+    
     createClickEvent(player, computerAI)               
 }
+
+async function computerAttack (computerAI, player, row, column) {
+    let message2 
+    setTimeout(() => {
+        message2 = computerAI.randomAttack(player, row, column)  
+    }, 1000);
+    await sleep(1000)
+
+    return message2
+}
+
+
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
