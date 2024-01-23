@@ -12,38 +12,53 @@ export default function createGame () {
 
 export function playGame (player, computerAI) {
     setupUI ()
+    createClickEvent (player, computerAI)
+}
+
+function createClickEvent (player, computerAI) {
     const computerBoard = document.querySelector(".computer-board")
     computerBoard.style.cursor = "pointer"
-    const computerBoardCells = computerBoard.querySelectorAll(".board-cell")
+    //const computerBoardCells = computerBoard.querySelectorAll(".board-cell")
 
-    let gameStop = false
-    computerBoardCells.forEach(cell => cell.addEventListener("click", () => {
-        if (gameStop === true) return
-        const message = player.sendAttack(cell.id[0], cell.id[1], computerAI)
-        if (message === "Game Over") {
-            showDialog ("player")
-            gameStop = true
+    computerBoard.addEventListener("click", (event) => {
+        computerBoard.style.cursor = "not-allowed"
+        gameRound(event, player, computerAI)
+    }, {once : true})
+}
+
+async function gameRound (event, player, computerAI) {
+    const message = player.sendAttack(event.target.id[0], event.target.id[1], computerAI)
+    if (message === "Game Over") {
+        showDialog ("player")
+        return
+    } else if (message === "already hit" || message === "hit") {
+        createClickEvent(player, computerAI)
+        return
+    }
+
+    let play = true
+    while(play === true) {
+        let message2 
+        setTimeout(() => {
+            message2 = computerAI.randomAttack(player)  
+        }, 1000);
+        await sleep(1000)
+        if (message2 === "Game Over") {
+            play = false
+            showDialog ("computer")
             return
-        } else if (message === "already hit" || message === "hit") {
-            return
+        }  
+        if (message2 === "hit") {
+            play = true
+        } else {
+            play = false
         }
-        let play = true
-        while(play === true) {
-            const message2 = computerAI.randomAttack(player)        
-            if (message2 === "Game Over") {
-                showDialog ("computer")
-                gameStop = true
-                play = false
-                return
-            }  
-            if (message2 === "hit") {
-                play = true
-            } else {
-                play = false
-            }
-        }
-                  
-    }))
+    }
+    createClickEvent(player, computerAI)               
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function setupUI () {
