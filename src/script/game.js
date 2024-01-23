@@ -18,8 +18,6 @@ export function playGame (player, computerAI) {
 function createClickEvent (player, computerAI) {
     const computerBoard = document.querySelector(".computer-board")
     computerBoard.style.cursor = "pointer"
-    //const computerBoardCells = computerBoard.querySelectorAll(".board-cell")
-
     computerBoard.addEventListener("click", (event) => {
         computerBoard.style.cursor = "not-allowed"
         gameRound(event, player, computerAI)
@@ -44,12 +42,9 @@ async function gameRound (event, player, computerAI) {
     let column
     let delay = true
     let play = true
-    //while (play === true) {
+    while (play === true) {
+        console.log("hits array length: " + hits.length)
         let message2
-        console.log("hits arr: ")
-        console.log(hits)
-        console.log("already hit arr: ")
-        console.log(alreadyHit)
         if (hits.length > 0) {
             row = hits[hits.length - 1][0]
             column = hits[hits.length - 1][1]
@@ -91,10 +86,6 @@ async function gameRound (event, player, computerAI) {
                 
                 
                 else if (column === hits[hits.length - 2][1]) {
-                    console.log("arrIncludesArr(alreadyHit, [row + 1, column]: " + arrIncludesArr(alreadyHit, [row + 1, column]))
-                    console.log("arrIncludesArr(alreadyHit, [row - 1, column]: " + arrIncludesArr(alreadyHit, [row - 1, column]))
-                    console.log("arrIncludesArr(hits, [row + 1, column]: " + arrIncludesArr(hits, [row + 1, column]))
-                    console.log("arrIncludesArr(hits, [row - 1, column]: " + arrIncludesArr(hits, [row - 1, column]))
                     let i = 0
                     if (arrIncludesArr(alreadyHit, [row + 1, column]) && arrIncludesArr(hits, [row + 1, column]) === false && row > 0) {
                         while (arrIncludesArr(alreadyHit, [row - i, column]) && arrIncludesArr(hits, [row - i, column]) && (row + addToRow) >= 0) {
@@ -176,7 +167,7 @@ async function gameRound (event, player, computerAI) {
             play = false
         }
         
-    //}
+    }
     createClickEvent(player, computerAI)               
 }
 
