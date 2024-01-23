@@ -40,19 +40,25 @@ async function gameRound (event, player, computerAI) {
         return
     }
 
+    let row
+    let column
     let delay = true
     let play = true
-    while (play === true) {
+    //while (play === true) {
         let message2
+        console.log("hits arr: ")
         console.log(hits)
+        console.log("already hit arr: ")
+        console.log(alreadyHit)
         if (hits.length > 0) {
-            let row = hits[hits.length - 1][0]
-            let column = hits[hits.length - 1][1]
+            row = hits[hits.length - 1][0]
+            column = hits[hits.length - 1][1]
             let addToRow = 0
             let addToColumn = 0
+            console.log("start row: " + row + ", start column: " + column)
 
             if (hits.length > 1) {
-                if (row == hits[hits.length - 2][0]) {
+                if (row === hits[hits.length - 2][0]) {
                     let i = 0
                     if (arrIncludesArr(alreadyHit, [row, column + 1]) && arrIncludesArr(hits, [row, column + 1]) === false && column > 0) {
                         while (arrIncludesArr(alreadyHit, [row, column - i]) && arrIncludesArr(hits, [row, column - i]) && (column - addToColumn >= 0)) {
@@ -85,6 +91,10 @@ async function gameRound (event, player, computerAI) {
                 
                 
                 else if (column === hits[hits.length - 2][1]) {
+                    console.log("arrIncludesArr(alreadyHit, [row + 1, column]: " + arrIncludesArr(alreadyHit, [row + 1, column]))
+                    console.log("arrIncludesArr(alreadyHit, [row - 1, column]: " + arrIncludesArr(alreadyHit, [row - 1, column]))
+                    console.log("arrIncludesArr(hits, [row + 1, column]: " + arrIncludesArr(hits, [row + 1, column]))
+                    console.log("arrIncludesArr(hits, [row - 1, column]: " + arrIncludesArr(hits, [row - 1, column]))
                     let i = 0
                     if (arrIncludesArr(alreadyHit, [row + 1, column]) && arrIncludesArr(hits, [row + 1, column]) === false && row > 0) {
                         while (arrIncludesArr(alreadyHit, [row - i, column]) && arrIncludesArr(hits, [row - i, column]) && (row + addToRow) >= 0) {
@@ -104,6 +114,7 @@ async function gameRound (event, player, computerAI) {
                         } 
                     } 
                     
+                    console.log("row: " + row + " and add to row: " + addToRow)
                     row += addToRow
                     if (arrIncludesArr(alreadyHit, [row, column])) {
                         hits = []
@@ -141,6 +152,7 @@ async function gameRound (event, player, computerAI) {
             row = Math.floor(Math.random() * 10)
             column = Math.floor(Math.random() * 10)
         }
+        console.log("end row: " + row + ", end column: " + column)
         message2 = await computerAttack (computerAI, player, row, column, delay)
         if (message2 === "Game Over") {
             play = false
@@ -164,7 +176,7 @@ async function gameRound (event, player, computerAI) {
             play = false
         }
         
-    }
+    //}
     createClickEvent(player, computerAI)               
 }
 
@@ -182,9 +194,10 @@ async function computerAttack (computerAI, player, row, column, delay) {
 }
 
 export function arrIncludesArr (bigArr, arrCheck) {
-    bigArr.some(arr => {
-        arr === arrCheck
+    return bigArr.some(arr => {
+        return (arr[0] === arrCheck[0] && arr[1] === arrCheck[1])
     })
+    
 }
 
 function sleep(ms) {
