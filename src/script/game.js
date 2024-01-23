@@ -40,80 +40,25 @@ async function gameRound (event, player, computerAI) {
 
     let row
     let column
+    let cell
     let delay = true
     let play = true
     while (play === true) {
-        console.log("hits array length: " + hits.length)
         let message2
         if (hits.length > 0) {
             row = hits[hits.length - 1][0]
             column = hits[hits.length - 1][1]
-            let addToRow = 0
-            let addToColumn = 0
-            console.log("start row: " + row + ", start column: " + column)
 
             if (hits.length > 1) {
                 if (row === hits[hits.length - 2][0]) {
-                    let i = 0
-                    if (arrIncludesArr(alreadyHit, [row, column + 1]) && arrIncludesArr(hits, [row, column + 1]) === false && column > 0) {
-                        while (arrIncludesArr(alreadyHit, [row, column - i]) && arrIncludesArr(hits, [row, column - i]) && (column - addToColumn >= 0)) {
-                            addToColumn -= 1
-                            i++
-                        }
-                    } else if (arrIncludesArr(alreadyHit, [row, column - 1]) === false && arrIncludesArr(hits, [row, column - 1]) === false && column > 0) {
-                        addToColumn -= 1
-                    } 
-                    else if (arrIncludesArr(alreadyHit, [row, column + 1]) === false && arrIncludesArr(hits, [row, column + 1]) === false && column < 9) {
-                        addToColumn += 1
-                    } else if (arrIncludesArr(alreadyHit, [row, column - 1]) && arrIncludesArr(hits, [row, column - 1]) === false  && column < 9) {
-                        i = 0
-                        while (arrIncludesArr(alreadyHit, [row, column + i]) && arrIncludesArr(hits, [row, column + i]) && (column + addToColumn) <= 9) {
-                            addToColumn += 1
-                            i++
-                        } 
-                    } 
-                    
-                    column += addToColumn
-                    if (arrIncludesArr(alreadyHit, [row, column])) {
-                        hits = []
-                        row = Math.floor(Math.random() * 10)
-                        column = Math.floor(Math.random() * 10)
-                    }
-                    
-                    
-                       
+                    cell = changeColumn(row, column)
                 }
-                
-                
                 else if (column === hits[hits.length - 2][1]) {
-                    let i = 0
-                    if (arrIncludesArr(alreadyHit, [row + 1, column]) && arrIncludesArr(hits, [row + 1, column]) === false && row > 0) {
-                        while (arrIncludesArr(alreadyHit, [row - i, column]) && arrIncludesArr(hits, [row - i, column]) && (row + addToRow) >= 0) {
-                            addToRow -= 1
-                            i++
-                        }
-                    } else if (arrIncludesArr(alreadyHit, [row - 1, column]) === false && arrIncludesArr(hits, [row - 1, column]) === false && row > 0) {
-                        addToRow -= 1
-                    }
-                    else if (arrIncludesArr(alreadyHit, [row + 1, column]) === false && arrIncludesArr(hits, [row + 1, column]) === false && row < 9) {
-                        addToRow += 1
-                    } else if (arrIncludesArr(alreadyHit, [row - 1, column]) && arrIncludesArr(hits, [row - 1, column]) === false && row < 9) {
-                        i = 0
-                        while (arrIncludesArr(alreadyHit, [row + i, column]) && arrIncludesArr(hits, [row + i, column]) && (row + addToRow) <= 9) {
-                            addToRow += 1
-                            i++
-                        } 
-                    } 
-                    
-                    console.log("row: " + row + " and add to row: " + addToRow)
-                    row += addToRow
-                    if (arrIncludesArr(alreadyHit, [row, column])) {
-                        hits = []
-                        row = Math.floor(Math.random() * 10)
-                        column = Math.floor(Math.random() * 10)
-                    }
+                    cell = changeRow(row, column)
                 }
-
+                console.log(cell)
+                row = cell.row
+                column = cell.column
             } 
             else {
                 if (arrIncludesArr(alreadyHit, [row + 1, column]) || ((row + 1) > 9)) {
@@ -143,7 +88,6 @@ async function gameRound (event, player, computerAI) {
             row = Math.floor(Math.random() * 10)
             column = Math.floor(Math.random() * 10)
         }
-        console.log("end row: " + row + ", end column: " + column)
         message2 = await computerAttack (computerAI, player, row, column, delay)
         if (message2 === "Game Over") {
             play = false
@@ -169,6 +113,92 @@ async function gameRound (event, player, computerAI) {
         
     }
     createClickEvent(player, computerAI)               
+}
+
+export function changeColumn (row, column) {
+    let i = 0
+    let addToColumn = 0
+    if (arrIncludesArr(alreadyHit, [row, column + 1]) && arrIncludesArr(hits, [row, column + 1]) === false) {
+        if (column > 0) {
+            while (arrIncludesArr(alreadyHit, [row, column - i]) && arrIncludesArr(hits, [row, column - i]) && (column - addToColumn >= 0)) {
+                addToColumn -= 1
+                i++
+            }
+        }
+        else {
+            row = changeRow(row, column).row
+        }
+        
+    } else if (arrIncludesArr(alreadyHit, [row, column - 1]) === false && arrIncludesArr(hits, [row, column - 1]) === false) {
+        column > 0 ? addToColumn -= 1 : row = changeRow(row, column).row
+    } 
+    else if (arrIncludesArr(alreadyHit, [row, column + 1]) === false && arrIncludesArr(hits, [row, column + 1]) === false) {
+        column < 9 ? addToColumn += 1 : row = changeRow(row, column).row
+    } else if (arrIncludesArr(alreadyHit, [row, column - 1]) && arrIncludesArr(hits, [row, column - 1]) === false) {
+        if (column < 9) {
+            i = 0
+            while (arrIncludesArr(alreadyHit, [row, column + i]) && arrIncludesArr(hits, [row, column + i]) && (column + addToColumn) <= 9) {
+                addToColumn += 1
+                i++
+            } 
+        }
+        else {
+            row = changeRow(row, column).row
+        }
+        
+    } 
+    
+    column += addToColumn
+    if (arrIncludesArr(alreadyHit, [row, column])) {
+        hits = []
+        column = Math.floor(Math.random() * 10)
+        row = Math.floor(Math.random() * 10)
+    }
+
+    return { row, column }
+}
+
+export function changeRow (row, column) {
+    let i = 0
+    let addToRow = 0
+    if (arrIncludesArr(alreadyHit, [row + 1, column]) && arrIncludesArr(hits, [row + 1, column]) === false) {
+        if (row > 0) {
+            while (arrIncludesArr(alreadyHit, [row - i, column]) && arrIncludesArr(hits, [row - i, column]) && (row + addToRow) >= 0) {
+                addToRow -= 1
+                i++
+            }
+        }
+        else {
+            column = changeColumn(row, column).column
+        }
+        
+    } else if (arrIncludesArr(alreadyHit, [row - 1, column]) === false && arrIncludesArr(hits, [row - 1, column]) === false) {
+        row > 0 ? addToRow -= 1 : column = changeColumn(row, column).column
+    }
+    else if (arrIncludesArr(alreadyHit, [row + 1, column]) === false && arrIncludesArr(hits, [row + 1, column]) === false) {
+        row < 9 ? addToRow += 1 : column = changeColumn(row, column).column
+    } else if (arrIncludesArr(alreadyHit, [row - 1, column]) && arrIncludesArr(hits, [row - 1, column]) === false) {
+        if (row < 9) {
+            i = 0
+            while (arrIncludesArr(alreadyHit, [row + i, column]) && arrIncludesArr(hits, [row + i, column]) && (row + addToRow) <= 9) {
+                addToRow += 1
+                i++
+            } 
+        }
+        else {
+            column = changeColumn(row, column).column
+        }
+        
+    } 
+    
+    row += addToRow
+    if (arrIncludesArr(alreadyHit, [row, column])) {
+        hits = []
+        row = Math.floor(Math.random() * 10)
+        column = Math.floor(Math.random() * 10)
+    }
+
+    return { row, column }
 }
 
 async function computerAttack (computerAI, player, row, column, delay) {
