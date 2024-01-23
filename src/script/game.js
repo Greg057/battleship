@@ -26,6 +26,11 @@ function createClickEvent (player, computerAI) {
     }, {once : true})
 }
 
+let row
+let column
+let hits = []
+let alreadyHit = []
+
 async function gameRound (event, player, computerAI) {
     const message = player.sendAttack(event.target.id[0], event.target.id[1], computerAI)
     if (message === "Game Over") {
@@ -36,24 +41,42 @@ async function gameRound (event, player, computerAI) {
         return
     }
 
+    let delay = true
     let play = true
-    let row
-    let column
-    let hits = []
-    let alreadyHit = []
     while (play === true) {
+        console.log("hits array: ")
         console.log(hits)
+        console.log("alreadyHit array: " )
+        console.log(alreadyHit)
         let message2
         if (hits.length > 0) {
             row = hits[hits.length - 1][0]
             column = hits[hits.length - 1][1]
-            row -= 1
-            console.log(row, column)
+            if (alreadyHit.includes((row + 1) * 10 + column)) {
+                if (alreadyHit.includes((row - 1) * 10 + column)) {
+                    if (alreadyHit.includes(row * 10 + column + 1)) {
+                        if (alreadyHit.includes(row * 10 + column - 1)) {
+                            row = Math.floor(Math.random() * 10)
+                            column = Math.floor(Math.random() * 10)
+                        } else {
+                            column -= 1
+                        }
+                    } else {
+                        column += 1
+                    }
+
+                } else {
+                    row -= 1
+                }
+
+            } else {
+                row += 1
+            }
         } else {
             row = Math.floor(Math.random() * 10)
             column = Math.floor(Math.random() * 10)
         }
-        message2 = await computerAttack (computerAI, player, row, column)
+        message2 = await computerAttack (computerAI, player, row, column, delay)
         if (message2 === "Game Over") {
             play = false
             showDialog ("computer")
@@ -61,25 +84,34 @@ async function gameRound (event, player, computerAI) {
         }  
         if (message2 === "hit") {
             hits.push([row, column])
+            alreadyHit.push(row * 10 + column)
+        }
+        if (message2 === "miss") {
+            alreadyHit.push(row * 10 + column)
         }
         if (message2 === "already hit") {
-            alreadyHit.push([row, column])
+            delay = false
         }
         if (message2 === "hit" || message2 === "already hit") {
             play = true
         } else {
             play = false
         }
+        
     }
     createClickEvent(player, computerAI)               
 }
 
-async function computerAttack (computerAI, player, row, column) {
+async function computerAttack (computerAI, player, row, column, delay) {
     let message2 
-    setTimeout(() => {
-        message2 = computerAI.randomAttack(player, row, column)  
-    }, 1000);
-    await sleep(1000)
+    if (delay) {
+        setTimeout(() => {
+            message2 = computerAI.randomAttack(player, row, column)  
+        }, 1000);
+        await sleep(1000)
+    } else {
+        message2 = computerAI.randomAttack(player, row, column)
+    }
     return message2
 }
 
