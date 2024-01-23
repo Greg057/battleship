@@ -26,7 +26,7 @@ function createClickEvent (player, computerAI) {
     }, {once : true})
 }
 
-function gameRound (event, player, computerAI) {
+async function gameRound (event, player, computerAI) {
     const message = player.sendAttack(event.target.id[0], event.target.id[1], computerAI)
     if (message === "Game Over") {
         showDialog ("player")
@@ -37,33 +37,40 @@ function gameRound (event, player, computerAI) {
     }
 
     let play = true
-    let hit = false
     let row
     let column
+    let hits = []
+    let alreadyHit = []
     while (play === true) {
+        console.log(hits)
         let message2
-        if (hit === true) {
-            row = row
-            column = column
-            message2 = computerAttack (computerAI, player, row, column)
+        if (hits.length > 0) {
+            row = hits[hits.length - 1][0]
+            column = hits[hits.length - 1][1]
+            row -= 1
+            console.log(row, column)
         } else {
-            const row = Math.floor(Math.random() * 10)
-            const column = Math.floor(Math.random() * 10)
-            message2 = computerAttack (computerAI, player, row, column)
+            row = Math.floor(Math.random() * 10)
+            column = Math.floor(Math.random() * 10)
         }
+        message2 = await computerAttack (computerAI, player, row, column)
         if (message2 === "Game Over") {
             play = false
             showDialog ("computer")
             return
         }  
         if (message2 === "hit") {
-            hit = true
+            hits.push([row, column])
         }
-        if (message2 !== "hit" || message2 !== "already hit") {
+        if (message2 === "already hit") {
+            alreadyHit.push([row, column])
+        }
+        if (message2 === "hit" || message2 === "already hit") {
+            play = true
+        } else {
             play = false
         }
     }
-    
     createClickEvent(player, computerAI)               
 }
 
@@ -73,7 +80,6 @@ async function computerAttack (computerAI, player, row, column) {
         message2 = computerAI.randomAttack(player, row, column)  
     }, 1000);
     await sleep(1000)
-
     return message2
 }
 
