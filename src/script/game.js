@@ -100,11 +100,13 @@ async function gameRound (event, player, computerAI) {
             alreadyHit.push([row, column])
  
         }
-        if (message2 === "miss") {
+        else if (message2 === "miss") {
             alreadyHit.push([row, column])
         }
         if (message2 === "already hit") {
             delay = false
+        } else {
+            delay = true
         }
         if (message2 === "hit" || message2 === "already hit") {
             play = true
@@ -122,7 +124,7 @@ export function changeColumn (row, column, call) {
     let addToColumn = 0
     if (arrIncludesArr(alreadyHit, [row, column + 1]) && arrIncludesArr(hits, [row, column + 1]) === false) {
         if (column > 0) {
-            while (arrIncludesArr(alreadyHit, [row, column - i]) && arrIncludesArr(hits, [row, column - i]) && (column - addToColumn >= 0)) {
+            while (arrIncludesArr(alreadyHit, [row, column - i]) && arrIncludesArr(hits, [row, column - i]) && (column - addToColumn > 0)) {
                 addToColumn -= 1
                 i++
             }
@@ -162,7 +164,7 @@ export function changeColumn (row, column, call) {
     } else if (arrIncludesArr(alreadyHit, [row, column - 1]) && arrIncludesArr(hits, [row, column - 1]) === false) {
         if (column < 9) {
             i = 0
-            while (arrIncludesArr(alreadyHit, [row, column + i]) && arrIncludesArr(hits, [row, column + i]) && (column + addToColumn) <= 9) {
+            while (arrIncludesArr(alreadyHit, [row, column + i]) && arrIncludesArr(hits, [row, column + i]) && (column + addToColumn) < 9) {
                 addToColumn += 1
                 i++
             } 
@@ -179,7 +181,7 @@ export function changeColumn (row, column, call) {
     } 
     
     column += addToColumn
-    if (arrIncludesArr(alreadyHit, [row, column])) {
+    if (arrIncludesArr(alreadyHit, [row, column]) || column < 0) {
         hits = []
         column = Math.floor(Math.random() * 10)
         row = Math.floor(Math.random() * 10)
@@ -194,7 +196,7 @@ export function changeRow (row, column, call) {
     let addToRow = 0
     if (arrIncludesArr(alreadyHit, [row + 1, column]) && arrIncludesArr(hits, [row + 1, column]) === false) {
         if (row > 0) {
-            while (arrIncludesArr(alreadyHit, [row - i, column]) && arrIncludesArr(hits, [row - i, column]) && (row + addToRow) >= 0) {
+            while (arrIncludesArr(alreadyHit, [row - i, column]) && arrIncludesArr(hits, [row - i, column]) && (row + addToRow) > 0) {
                 addToRow -= 1
                 i++
             }
@@ -234,7 +236,7 @@ export function changeRow (row, column, call) {
     } else if (arrIncludesArr(alreadyHit, [row - 1, column]) && arrIncludesArr(hits, [row - 1, column]) === false) {
         if (row < 9) {
             i = 0
-            while (arrIncludesArr(alreadyHit, [row + i, column]) && arrIncludesArr(hits, [row + i, column]) && (row + addToRow) <= 9) {
+            while (arrIncludesArr(alreadyHit, [row + i, column]) && arrIncludesArr(hits, [row + i, column]) && (row + addToRow) < 9) {
                 addToRow += 1
                 i++
             } 
@@ -251,11 +253,12 @@ export function changeRow (row, column, call) {
     } 
     
     row += addToRow
-    if (arrIncludesArr(alreadyHit, [row, column])) {
+    if (arrIncludesArr(alreadyHit, [row, column]) || row < 0) {
         hits = []
-        row = Math.floor(Math.random() * 10)
         column = Math.floor(Math.random() * 10)
+        row = Math.floor(Math.random() * 10)
     }
+
     console.log("from changeRow: " + row + ", column : " + column)
     return { row, column }
 }
