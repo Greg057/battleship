@@ -275,8 +275,8 @@ async function computerAttack (computerAI, player, row, column, delay) {
     if (delay) {
         setTimeout(() => {
             message2 = computerAI.randomAttack(player, row, column)  
-        }, 1000);
-        await sleep(2000)
+        }, 800);
+        await sleep(800)
     } else {
         message2 = computerAI.randomAttack(player, row, column)
     }
