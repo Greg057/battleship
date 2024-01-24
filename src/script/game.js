@@ -49,12 +49,13 @@ async function gameRound (event, player, computerAI) {
             row = hits[hits.length - 1][0]
             column = hits[hits.length - 1][1]
 
+            let call = 0
             if (hits.length > 1) {
                 if (row === hits[hits.length - 2][0]) {
-                    cell = changeColumn(row, column)
+                    cell = changeColumn(row, column, call)
                 }
                 else if (column === hits[hits.length - 2][1]) {
-                    cell = changeRow(row, column)
+                    cell = changeRow(row, column, call)
                 }
                 console.log(cell)
                 row = cell.row
@@ -115,7 +116,8 @@ async function gameRound (event, player, computerAI) {
     createClickEvent(player, computerAI)               
 }
 
-export function changeColumn (row, column) {
+export function changeColumn (row, column, call) {
+    call++
     let i = 0
     let addToColumn = 0
     if (arrIncludesArr(alreadyHit, [row, column + 1]) && arrIncludesArr(hits, [row, column + 1]) === false) {
@@ -126,14 +128,37 @@ export function changeColumn (row, column) {
             }
         }
         else {
-            row = changeRow(row, column).row
+            if (call < 2) {
+                row = changeRow(row, column, call).row
+            } else {
+                column = Math.floor(Math.random() * 10)
+                row = Math.floor(Math.random() * 10)
+            } 
         }
         
     } else if (arrIncludesArr(alreadyHit, [row, column - 1]) === false && arrIncludesArr(hits, [row, column - 1]) === false) {
-        column > 0 ? addToColumn -= 1 : row = changeRow(row, column).row
+        if (column > 0) {
+            addToColumn -= 1
+        } else {
+            if (call < 2) {
+                row = changeRow(row, column, call).row
+            } else {
+                column = Math.floor(Math.random() * 10)
+                row = Math.floor(Math.random() * 10)
+            } 
+        } 
     } 
     else if (arrIncludesArr(alreadyHit, [row, column + 1]) === false && arrIncludesArr(hits, [row, column + 1]) === false) {
-        column < 9 ? addToColumn += 1 : row = changeRow(row, column).row
+        if (column < 9) {
+            addToColumn += 1
+        } else {
+            if (call < 2) {
+                row = changeRow(row, column, call).row
+            } else {
+                column = Math.floor(Math.random() * 10)
+                row = Math.floor(Math.random() * 10)
+            } 
+        }
     } else if (arrIncludesArr(alreadyHit, [row, column - 1]) && arrIncludesArr(hits, [row, column - 1]) === false) {
         if (column < 9) {
             i = 0
@@ -143,7 +168,12 @@ export function changeColumn (row, column) {
             } 
         }
         else {
-            row = changeRow(row, column).row
+            if (call < 2) {
+                row = changeRow(row, column, call).row
+            } else {
+                column = Math.floor(Math.random() * 10)
+                row = Math.floor(Math.random() * 10)
+            } 
         }
         
     } 
@@ -154,11 +184,12 @@ export function changeColumn (row, column) {
         column = Math.floor(Math.random() * 10)
         row = Math.floor(Math.random() * 10)
     }
-
+    console.log("from changeColumn: " + row + ", column : " + column)
     return { row, column }
 }
 
-export function changeRow (row, column) {
+export function changeRow (row, column, call) {
+    call++
     let i = 0
     let addToRow = 0
     if (arrIncludesArr(alreadyHit, [row + 1, column]) && arrIncludesArr(hits, [row + 1, column]) === false) {
@@ -169,14 +200,37 @@ export function changeRow (row, column) {
             }
         }
         else {
-            column = changeColumn(row, column).column
+            if (call < 2) {
+                column = changeColumn(row, column, call).column
+            } else {
+                column = Math.floor(Math.random() * 10)
+                row = Math.floor(Math.random() * 10)
+            } 
         }
         
     } else if (arrIncludesArr(alreadyHit, [row - 1, column]) === false && arrIncludesArr(hits, [row - 1, column]) === false) {
-        row > 0 ? addToRow -= 1 : column = changeColumn(row, column).column
+        if (row > 0) {
+            addToRow -= 1
+        } else {
+            if (call < 2) {
+                column = changeColumn(row, column, call).column
+            } else {
+                column = Math.floor(Math.random() * 10)
+                row = Math.floor(Math.random() * 10)
+            } 
+        } 
     }
     else if (arrIncludesArr(alreadyHit, [row + 1, column]) === false && arrIncludesArr(hits, [row + 1, column]) === false) {
-        row < 9 ? addToRow += 1 : column = changeColumn(row, column).column
+        if (row < 9) {
+            addToRow += 1
+        } else {
+            if (call < 2) {
+                column = changeColumn(row, column, call).column
+            } else {
+                column = Math.floor(Math.random() * 10)
+                row = Math.floor(Math.random() * 10)
+            } 
+        }
     } else if (arrIncludesArr(alreadyHit, [row - 1, column]) && arrIncludesArr(hits, [row - 1, column]) === false) {
         if (row < 9) {
             i = 0
@@ -186,7 +240,12 @@ export function changeRow (row, column) {
             } 
         }
         else {
-            column = changeColumn(row, column).column
+            if (call < 2) {
+                column = changeColumn(row, column, call).column
+            } else {
+                column = Math.floor(Math.random() * 10)
+                row = Math.floor(Math.random() * 10)
+            } 
         }
         
     } 
@@ -197,7 +256,7 @@ export function changeRow (row, column) {
         row = Math.floor(Math.random() * 10)
         column = Math.floor(Math.random() * 10)
     }
-
+    console.log("from changeRow: " + row + ", column : " + column)
     return { row, column }
 }
 
@@ -257,4 +316,6 @@ function cleanUpForNewGame() {
     document.querySelector(".player-board").innerHTML = ""
     document.querySelector(".computer-board").innerHTML = ""
     document.querySelector(".main-container").querySelector("h2").textContent = "Place your ships to begin!"
+    hits = []
+    alreadyHit = []
 }
