@@ -29,7 +29,14 @@ let hits = []
 let alreadyHit = []
 
 async function gameRound (event, player, computerAI) {
-    const message = player.sendAttack(event.target.id[0], event.target.id[1], computerAI)
+    let message
+    try {
+        message = player.sendAttack(event.target.id[0], event.target.id[1], computerAI)
+    } catch {
+        createClickEvent(player, computerAI)
+        return
+    }
+    
     if (message === "Game Over") {
         showDialog ("player")
         return
@@ -269,7 +276,7 @@ async function computerAttack (computerAI, player, row, column, delay) {
         setTimeout(() => {
             message2 = computerAI.randomAttack(player, row, column)  
         }, 1000);
-        await sleep(1000)
+        await sleep(2000)
     } else {
         message2 = computerAI.randomAttack(player, row, column)
     }
