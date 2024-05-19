@@ -3,6 +3,9 @@
 ## Project Overview
 This project implements the classic game "Battleship" using Test Driven Development (TDD). It focuses on building a robust, testable application, showcasing key concepts in TDD, object-oriented design, and JavaScript module patterns.
 
+## Deployment
+The project is deployed and accessible online at the following link: [Battleship Game](https://greg057.github.io/battleship-game/)
+
 ## Features
 - **Ship Management**: Create ships with attributes like length, hits, and sunk status.
 - **Gameboard Functionality**: Place ships, handle attacks, track hits and misses, and check if all ships are sunk.
